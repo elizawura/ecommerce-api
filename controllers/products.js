@@ -3,11 +3,16 @@ import { addProductValidator } from "../validators/products.js";
 
 export const addProduct = async (req, res, next) => {
   try {
-    //upload product image
     //validate the product information
-    const { error, value } = addProductValidator.validate(req.body, {
-      abortEarly: false,
-    });
+    const { error, value } = addProductValidator.validate(
+      {
+        ...req.body,
+        image: req.file.filename,
+      },
+      {
+        abortEarly: false,
+      }
+    );
     if (error) {
       return res.status(422).json(error);
       //to get only the message replace "error" with "error.details[0].message"
@@ -15,7 +20,7 @@ export const addProduct = async (req, res, next) => {
     //save product information in database
     const result = await ProductModel.create(value);
     //return response
-    res.json(result);
+    res.status(201).json(result);
   } catch (error) {
     next(error);
   }

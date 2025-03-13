@@ -1,4 +1,5 @@
 import { Schema, model, modelNames } from "mongoose";
+import normalize from "normalize-mongoose";
 
 const productSchema = new Schema(
   {
@@ -13,4 +14,5 @@ const productSchema = new Schema(
   }
 );
 
+productSchema.plugin(normalize);
 export const ProductModel = model("Product", productSchema);

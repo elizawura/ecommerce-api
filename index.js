@@ -1,6 +1,7 @@
 import express from "express";
 import productsRouter from "./routes/products.js";
 import mongoose from "mongoose";
+import "dotenv/config";
 
 // make database connnection
 
@@ -16,7 +17,7 @@ app.use(express.json());
 app.use(productsRouter);
 
 //listen for incoming request
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5500;
 app.listen(port, () => {
   console.log(`server listening on port ${port}`);
 });

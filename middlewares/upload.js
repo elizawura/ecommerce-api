@@ -11,3 +11,21 @@ export const remoteUpload = multer({
     //* means let the files go into a folder
   }),
 });
+
+export const productImageUpload = multer({
+  storage: multerSaveFilesOrg({
+    apiAccessToken: process.env.SAVEFILESORG_API_KEY,
+    relativePath: "/ecommerce-api/product-images/*",
+
+    //* means let the files go into a folder
+  }),
+});
+
+export const productPicturesUpload = multer({
+  storage: multerSaveFilesOrg({
+    apiAccessToken: process.env.SAVEFILESORG_API_KEY,
+    relativePath: "/ecommerce-api/product-pictures/*",
+
+    //* means let the files go into a folder
+  }),
+});

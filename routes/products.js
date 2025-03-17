@@ -6,13 +6,23 @@ import {
   getProducts,
   updateProduct,
 } from "../controllers/products.js";
-import { localUpload, remoteUpload } from "../middlewares/upload.js";
+import {
+  localUpload,
+  productImageUpload,
+  productPicturesUpload,
+  remoteUpload,
+} from "../middlewares/upload.js";
 
 // create product router
 const productsRouter = Router();
 
 //define routes
-productsRouter.post("/products", remoteUpload.single("image"), addProduct);
+productsRouter.post(
+  "/products",
+  // productImageUpload.single("image"),
+  productPicturesUpload.array("pictures", 3),
+  addProduct
+);
 
 productsRouter.get("/products", getProducts);
 

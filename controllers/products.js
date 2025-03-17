@@ -3,11 +3,15 @@ import { addProductValidator } from "../validators/products.js";
 
 export const addProduct = async (req, res, next) => {
   try {
+    console.log(req.file, req.files);
     //validate the product information
     const { error, value } = addProductValidator.validate(
       {
         ...req.body,
-        image: req.file.filename,
+        // image: req.file.filename,
+        pictures: req.files?.map((file) => {
+          return file.filename;
+        }),
       },
       {
         abortEarly: false,
@@ -28,8 +32,11 @@ export const addProduct = async (req, res, next) => {
 
 export const getProducts = async (req, res, next) => {
   try {
+    const { filter = "{}", sort = "{}" } = req.query;
     //ferch products from database
-    const result = await ProductModel.find();
+    const result = await ProductModel.find(JSON.parse(filter)).sort(
+      JSON.parse(sort)
+    );
     //return response
     res.json(result);
   } catch (error) {

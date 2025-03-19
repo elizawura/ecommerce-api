@@ -2,6 +2,7 @@ import express from "express";
 import productsRouter from "./routes/products.js";
 import mongoose from "mongoose";
 import "dotenv/config";
+import userRouter from "./routes/user.js";
 
 // make database connnection
 
@@ -15,6 +16,7 @@ app.use(express.json());
 
 //use route
 app.use(productsRouter);
+app.use(userRouter);
 
 //listen for incoming request
 const port = process.env.PORT || 5500;

@@ -2,6 +2,7 @@ import { UserModel } from "../models/user.js";
 import {
   loginUserValidator,
   registerUserValidator,
+  updateUserValidator,
 } from "../validators/user.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -56,4 +57,22 @@ export const loginUser = async (req, res, next) => {
   });
   //return response
   res.status(200).json({ accessToken });
+};
+
+export const updateUser = async (req, res, next) => {
+  //validate request body
+  const { error, value } = updateUserValidator.validate(req.body);
+  if (error) {
+    return res.status(422).json(error);
+  }
+  //update user in database
+  const result = await UserModel.findByIdAndUpdate(
+    //for a user to update themselves (req.auth.id),
+    //for a superadmin to update themselves
+    req.params.id,
+    value,
+    { new: true }
+  );
+  //return response
+  res.status(200).json(result);
 };

@@ -21,11 +21,25 @@ export const addProduct = async (req, res, next) => {
       return res.status(422).json(error);
       //to get only the message replace "error" with "error.details[0].message"
     }
+    // //check product does not exist already (prevents the error from happening)
+    // const count = await ProductModel.countDocuments({
+    //   name: value.name,
+    // });
+    // if (count) {
+    //   return res.status(409).json("Product with name already exists");
+    // }
     //save product information in database
-    const result = await ProductModel.create(value);
+    const result = await ProductModel.create({
+      ...value,
+      userId: req.auth.id,
+    });
     //return response
     res.status(201).json(result);
   } catch (error) {
+    //handles the error after it happens
+    if (error.name === "MongooseError") {
+      return res.status(409).json(error.message);
+    }
     next(error);
   }
 };
@@ -50,6 +64,21 @@ export const countProducts = (req, res) => {
 
 export const updateProduct = (req, res) => {
   res.send(`product with id ${req.params.id} updated!`);
+};
+
+export const replaceProduct = async (req, res, next) => {
+  //validate incoming request body
+
+  //perform model replace operation
+  const result = await ProductModel.findOneAndReplace(
+    {
+      _id: req.params.id,
+    },
+    req.body,
+    { new: true }
+  );
+  //return response
+  res.status(200).json(result);
 };
 
 export const deleteProduct = (req, res) => {

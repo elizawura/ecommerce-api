@@ -1,10 +1,12 @@
 import { Router } from "express";
 import {
+  getAuthenticatedUser,
   getUsers,
   loginUser,
   registerUser,
   updateUser,
 } from "../controllers/user.js";
+import { isAuthenticated } from "../middlewares/auth.js";
 
 //create user router
 export const userRouter = Router();
@@ -15,6 +17,7 @@ userRouter.post("/users/login", loginUser);
 userRouter.patch("/users/:id", updateUser);
 userRouter.patch("/users/:id", updateUser);
 userRouter.get("/users", getUsers);
+userRouter.get("/users/me", isAuthenticated, getAuthenticatedUser);
 
 //export router
 export default userRouter;

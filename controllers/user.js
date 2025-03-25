@@ -56,7 +56,14 @@ export const loginUser = async (req, res, next) => {
     expiresIn: "24h",
   });
   //return response
-  res.status(200).json({ accessToken });
+  res.status(200).json({
+    accessToken,
+    user: await UserModel.findById(user.id).select({ password: false }),
+    //OR user: {
+    //   role: user.role,
+    //   email: user.email,
+    // },
+  });
 };
 
 export const updateUser = async (req, res, next) => {
@@ -75,6 +82,19 @@ export const updateUser = async (req, res, next) => {
   );
   //return response
   res.status(200).json(result);
+};
+
+export const getAuthenticatedUser = async (req, res, next) => {
+  try {
+    //get user by id using req.auth.id
+    const result = await UserModel.findById(req.auth.id).select({
+      password: false,
+    });
+    //return response
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const getUsers = async (req, res, next) => {

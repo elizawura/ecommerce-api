@@ -76,3 +76,17 @@ export const updateUser = async (req, res, next) => {
   //return response
   res.status(200).json(result);
 };
+
+export const getUsers = async (req, res, next) => {
+  try {
+    const { filter = "{}", sort = "{}" } = req.query;
+    //ferch products from database
+    const result = await UserModel.find(JSON.parse(filter)).sort(
+      JSON.parse(sort)
+    );
+    //return response
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};

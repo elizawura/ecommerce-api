@@ -1,4 +1,5 @@
 import { UserModel } from "../models/user.js";
+import { mailTransporter, registerUserMailTemplate } from "../utils/mail.js";
 import {
   loginUserValidator,
   registerUserValidator,
@@ -28,6 +29,13 @@ export const registerUser = async (req, res, next) => {
     password: hashedPassword,
   });
   //send registration email to user
+  await mailTransporter.sendMail({
+    from: process.env.APP_EMAIL,
+    to: value.email,
+    subject: "Checking out NodeMailer",
+    // text: `Dear ${value.username},\n A new account has been created for you \n Thank You`,
+    html: registerUserMailTemplate.replace("{{username}}", value.username),
+  });
   //(optional) generate access token for user
   //return response
   res.status(201).json("user registered successfully");
